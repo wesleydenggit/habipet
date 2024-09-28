@@ -1,0 +1,22 @@
+{
+  "pet": {
+    "name": "Doggo",
+    "level": 2,
+    "health": 100,
+    "happiness": 100
+  },
+  "habits": [
+    {
+      "id": 1,
+      "name": "Reading",
+      "frequency": "Daily",
+      "completed": true
+    },
+    {
+      "id": 2,
+      "name": "Jogging",
+      "frequency": "Weekly",
+      "completed": true
+    }
+  ]
+}
