@@ -1,33 +1,17 @@
 // frontend/src/App.js
+
 import React from 'react';
-import { Typography, Box } from '@mui/material';
-import Game from './components/Game'; // Import the Game component
+import { Box } from '@mui/material';
+import Background from './components/Background';
+import Pet from './components/Pet';
+import AddHabit from './components/AddHabit'; // Import AddHabit component
 
 const App = () => {
   return (
-    <Box
-      sx={{
-        width: '100vw',   // Full viewport width
-        height: '100vh',  // Full viewport height
-        overflow: 'hidden',
-        position: 'relative',
-      }}
-    >
-      <Typography
-        variant="h3"
-        align="center"
-        gutterBottom
-        sx={{
-          position: 'absolute',
-          top: '10px',
-          width: '100%',
-          zIndex: 2,
-          color: '#fff',
-        }}
-      >
-        HabitPet
-      </Typography>
-      <Game /> {/* Include the Game component */}
+    <Box sx={{ position: 'relative', width: '100%', height: '100vh' }}>
+      <Background />
+      <Pet />
+      <AddHabit /> {/* Include AddHabit component */}
     </Box>
   );
 };

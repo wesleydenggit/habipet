@@ -16,6 +16,18 @@ export const SET_ERROR = 'SET_ERROR';
 /**
  * Action Creators
  */
+export const addHabit = (habit) => async (dispatch) => {
+  try {
+    const res = await axios.post(`${API_URL}/habits`, habit);
+    dispatch({
+      type: 'ADD_HABIT',
+      payload: res.data,
+    });
+  } catch (error) {
+    console.error('Error adding habit:', error);
+    // Optionally, dispatch an error action or handle it as needed
+  }
+}
 
 /**
  * fetchData
@@ -42,21 +54,6 @@ export const fetchData = () => async (dispatch) => {
  * Adds a new habit to the backend and updates the Redux store.
  * @param {Object} habit - The habit to add (e.g., { name: 'Read', frequency: 'Daily' }).
  */
-export const addHabit = (habit) => async (dispatch) => {
-  try {
-    const response = await axios.post(`${API_URL}/habits`, habit);
-    dispatch({
-      type: ADD_HABIT,
-      payload: response.data,
-    });
-  } catch (error) {
-    console.error('Error adding habit:', error);
-    dispatch({
-      type: SET_ERROR,
-      payload: 'Failed to add habit.',
-    });
-  }
-};
 
 /**
  * updateHabit
