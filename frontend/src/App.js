@@ -1,25 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+// frontend/src/App.js
+import React, { useEffect } from 'react';
+import { Container, Typography } from '@mui/material';
+import Game from './components/Game'; // Import the Game component
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="md" style={{ marginTop: '2rem' }}>
+      <Typography variant="h3" align="center" gutterBottom>
+        HabitPet
+      </Typography>
+      <Game /> {/* Include the Game component */}
+    </Container>
   );
-}
+};
 
 export default App;
