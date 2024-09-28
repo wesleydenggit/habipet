@@ -1,15 +1,20 @@
-// frontend/src/components/Game.js
 import React, { useEffect, useState, useRef } from 'react';
 import { Box } from '@mui/material';
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
+import characterImg from '../assets/character.png';
+import environmentImg from '../assets/background.png';
 
 const Game = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isMoving, setIsMoving] = useState(false);
   const environmentRef = useRef(null);
   const gameContainerRef = useRef(null);
+  const [direction, setDirection] = useState('right'); // Default direction is right
 
-  const speed = 5; // Movement speed in pixels per frame
+  const controls = useAnimation();
+  const prevDirectionRef = useRef(direction);
+
+  const speed = 2; // Movement speed in pixels per frame
 
   // Handle Key Presses
   const keysPressed = useRef({
@@ -60,6 +65,7 @@ const Game = () => {
     const animate = () => {
       let dx = 0;
       let dy = 0;
+      let newDirection = direction; // Keep track of the new direction
 
       if (keysPressed.current['ArrowUp'] || keysPressed.current['w']) {
         dy += speed;
@@ -69,9 +75,11 @@ const Game = () => {
       }
       if (keysPressed.current['ArrowLeft'] || keysPressed.current['a']) {
         dx += speed;
+        newDirection = 'left'; // Set direction to left
       }
       if (keysPressed.current['ArrowRight'] || keysPressed.current['d']) {
         dx -= speed;
+        newDirection = 'right'; // Set direction to right
       }
 
       if (dx !== 0 || dy !== 0) {
@@ -94,11 +102,16 @@ const Game = () => {
         setIsMoving(false);
       }
 
+      // Update direction if it has changed
+      if (newDirection !== direction) {
+        setDirection(newDirection);
+      }
+
       requestAnimationFrame(animate);
     };
 
     animate();
-  }, []);
+  }, [direction]);
 
   // Update Environment Position
   useEffect(() => {
@@ -106,6 +119,34 @@ const Game = () => {
       environmentRef.current.style.transform = `translate(${position.x}px, ${position.y}px)`;
     }
   }, [position]);
+
+  // Update character animation when direction or isMoving changes
+  useEffect(() => {
+    const shouldAnimateScaleX = prevDirectionRef.current !== direction;
+
+    controls.start({
+      rotate: isMoving ? [0, 10, -10, 0] : 0,
+      scale: isMoving ? 1.2 : 1,
+      scaleX: direction === 'left' ? -1 : 1,
+      transition: {
+        rotate: {
+          repeat: isMoving ? Infinity : 0,
+          duration: 1,
+          ease: 'easeInOut',
+        },
+        scale: {
+          repeat: isMoving ? Infinity : 0,
+          duration: 1,
+          ease: 'easeInOut',
+        },
+        scaleX: {
+          duration: shouldAnimateScaleX ? 0.1 : 0, // Animate only on direction change
+        },
+      },
+    });
+
+    prevDirectionRef.current = direction;
+  }, [direction, isMoving, controls]);
 
   return (
     <Box
@@ -118,26 +159,24 @@ const Game = () => {
       }}
       sx={{
         position: 'relative',
-        width: { xs: '100%', sm: '800px' },
-        height: { xs: '400px', sm: '600px' },
+        width: '100%',
+        height: '100%',
         overflow: 'hidden',
-        border: '2px solid #000',
-        margin: '2rem auto',
         backgroundColor: '#a0d2eb',
         outline: 'none',
       }}
     >
       {/* Environment */}
       <motion.img
-        src="../assets/background.jpg"
+        src={environmentImg}
         alt="Environment"
         ref={environmentRef}
         style={{
           position: 'absolute',
           top: 0,
           left: 0,
-          width: '1600px', // Adjust based on environment image
-          height: '1200px', // Adjust based on environment image
+          width: '200%',   // Adjusted to cover more area
+          height: '200%',  // Adjusted to cover more area
           userSelect: 'none',
           pointerEvents: 'none',
         }}
@@ -145,28 +184,20 @@ const Game = () => {
 
       {/* Character */}
       <motion.img
-        src="../assets/character.png"
+        src={characterImg}
         alt="Character"
         style={{
           position: 'absolute',
           top: '50%',
           left: '50%',
-          width: '50px',
-          height: '50px',
-          transform: 'translate(-50%, -50%)',
+          width: '100px',
+          height: '100px',
           zIndex: 1,
           userSelect: 'none',
           pointerEvents: 'none',
+          transform: 'translate(-50%, -50%)',
         }}
-        animate={{
-          rotate: isMoving ? [0, 10, -10, 0] : 0,
-          scale: isMoving ? 1.2 : 1,
-        }}
-        transition={{
-          repeat: isMoving ? Infinity : 0,
-          duration: 1,
-          ease: 'easeInOut',
-        }}
+        animate={controls}
       />
     </Box>
   );

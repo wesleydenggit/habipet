@@ -1,16 +1,34 @@
 // frontend/src/App.js
-import React, { useEffect } from 'react';
-import { Container, Typography } from '@mui/material';
+import React from 'react';
+import { Typography, Box } from '@mui/material';
 import Game from './components/Game'; // Import the Game component
 
 const App = () => {
   return (
-    <Container maxWidth="md" style={{ marginTop: '2rem' }}>
-      <Typography variant="h3" align="center" gutterBottom>
+    <Box
+      sx={{
+        width: '100vw',   // Full viewport width
+        height: '100vh',  // Full viewport height
+        overflow: 'hidden',
+        position: 'relative',
+      }}
+    >
+      <Typography
+        variant="h3"
+        align="center"
+        gutterBottom
+        sx={{
+          position: 'absolute',
+          top: '10px',
+          width: '100%',
+          zIndex: 2,
+          color: '#fff',
+        }}
+      >
         HabitPet
       </Typography>
       <Game /> {/* Include the Game component */}
-    </Container>
+    </Box>
   );
 };
 
