@@ -20,6 +20,11 @@ router.get('/data', (req, res) => {
   res.json(data);
 });
 
+router.get('/pet', (req, res) => {
+  const data = readData();
+  res.json(data.pet);
+});
+
 // Get all habits
 router.get('/fetch-habits', (req, res) => {
   const data = readData();
@@ -33,27 +38,64 @@ router.post('/habits', (req, res) => {
     id: Date.now(),
     name: req.body.name,
     frequency: req.body.frequency,
-    completed: false
+    completed: false,
+    streak: 0,
+    lastCompleted: null
   };
   data.habits.push(newHabit);
   writeData(data);
   res.json(newHabit);
 });
 
+// Leveling thresholds: 100 XP per level
+const getXpNeededForNextLevel = (level) => level * 100;
+
 // Update a habit
 router.put('/habits/:id', (req, res) => {
   const data = readData();
-  const habit = data.habits.find(h => h.id === parseInt(req.params.id));
+  const habit = data.habits.find((h) => h.id === parseInt(req.params.id));
   if (habit) {
-    habit.completed = req.body.completed;
-    if (habit.completed) {
-      data.pet.level += 1;
-      data.pet.happiness = Math.min(data.pet.happiness + 10, 100);
-    } else {
-      data.pet.health = Math.max(data.pet.health - 10, 0);
+    if (habit.completed && !req.body.completed) {
+      // Prevent uncompleting a completed habit
+      return res.status(400).json({ message: 'Cannot uncomplete a completed habit' });
     }
-    writeData(data);
-    res.json(habit);
+
+    if (!habit.completed && req.body.completed) {
+      // Mark habit as completed
+      habit.completed = true;
+      const today = new Date().toISOString().split('T')[0];
+      habit.lastCompleted = today;
+
+      // Update streak
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      if (habit.lastCompleted === yesterdayStr) {
+        // Continued streak
+        habit.streak += 1;
+      } else {
+        // New streak
+        habit.streak = 1;
+      }
+
+      // Calculate XP gain based on streak
+      const baseXp = 100;
+      const xpGain = baseXp * habit.streak; // Higher streaks give more XP
+      data.pet.xp += xpGain;
+
+      // Check for level up
+      const xpNeeded = getXpNeededForNextLevel(data.pet.level);
+      while (data.pet.xp >= xpNeeded) {
+        data.pet.xp -= xpNeeded;
+        data.pet.level += 1;
+      }
+
+      writeData(data);
+      res.json({ ...habit, xpGained: xpGain });
+    } else {
+      res.status(400).json({ message: 'Invalid habit update' });
+    }
   } else {
     res.status(404).json({ message: 'Habit not found' });
   }
@@ -70,6 +112,37 @@ router.delete('/habits/:id', (req, res) => {
   } else {
     res.status(404).json({ message: 'Habit not found' });
   }
+});
+
+const resetHabitsIfNeeded = () => {
+  const data = readData();
+  const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+
+  if (data.lastHabitReset !== today) {
+    // It's a new day; reset habits
+    data.habits.forEach((habit) => {
+      // Check if the habit was completed yesterday
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      if (habit.lastCompleted === yesterdayStr) {
+        // Streak continues
+      } else if (habit.lastCompleted !== today) {
+        // Streak is broken
+        habit.streak = 0;
+      }
+      // Reset the completed status
+      habit.completed = false;
+    });
+    data.lastHabitReset = today;
+    writeData(data);
+  }
+};
+// Apply reset logic before processing any request
+router.use((req, res, next) => {
+  resetHabitsIfNeeded();
+  next();
 });
 
 module.exports = router;
