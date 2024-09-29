@@ -15,14 +15,15 @@ const XPBar = ({ pet }) => {
     <Box
       sx={{
         position: 'fixed',
-        bottom: 0,
+        bottom: "7vh",
         width: '100%',
         padding: 1,
-        backgroundColor: 'rgba(255,255,255,0.8)',
+        backgroundColor: 'rgba(255,255,255,0)',
         zIndex: 2,
+        color: "white",
       }}
     >
-      <Typography variant="body1" align="center">
+      <Typography variant="h3" align="center" fontFamily={"Lucida Console"}>
         Level {pet.level}
       </Typography>
       <LinearProgress 
@@ -40,7 +41,7 @@ const XPBar = ({ pet }) => {
           }
         }}
       />
-      <Typography variant="body2" align="center">
+      <Typography variant="h5" align="center" fontFamily={"Lucida Console"}>
         {pet.xp} / {xpNeededForNextLevel} XP
       </Typography>
     </Box>

@@ -110,7 +110,7 @@ const Pet = () => {
       ref={petRef}
       style={{
         position: 'absolute',
-        bottom: '100px', // Position the pet above the bottom
+        bottom: '200px', // Position the pet above the bottom
         left: '48%', // Center horizontally
         transform: 'translateX(-50%)',
         userSelect: 'none',

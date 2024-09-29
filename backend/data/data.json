@@ -2,10 +2,19 @@
   "pet": {
     "name": "Doggo",
     "level": 4,
-    "xp": 100,
+    "xp": 200,
     "health": 100,
     "happiness": 100
   },
-  "habits": [],
+  "habits": [
+    {
+      "id": 1727591265347,
+      "name": "test",
+      "frequency": "Daily",
+      "completed": true,
+      "streak": 1,
+      "lastCompleted": "2024-09-29"
+    }
+  ],
   "lastHabitReset": "2024-09-29"
 }
