@@ -1,19 +1,35 @@
 {
   "pet": {
     "name": "Doggo",
-    "level": 5,
-    "xp": 250,
+    "level": 3,
+    "xp": 0,
     "health": 100,
     "happiness": 100
   },
   "habits": [
     {
-      "id": 1727566472689,
-      "name": "nj",
+      "id": 1727582454628,
+      "name": "a",
       "frequency": "Daily",
       "completed": true,
       "streak": 1,
-      "lastCompleted": "2024-09-28"
+      "lastCompleted": "2024-09-29"
+    },
+    {
+      "id": 1727582463849,
+      "name": "b",
+      "frequency": "Daily",
+      "completed": true,
+      "streak": 1,
+      "lastCompleted": "2024-09-29"
+    },
+    {
+      "id": 1727582464325,
+      "name": "c",
+      "frequency": "Daily",
+      "completed": true,
+      "streak": 1,
+      "lastCompleted": "2024-09-29"
     }
   ],
   "lastHabitReset": "2024-09-27"
