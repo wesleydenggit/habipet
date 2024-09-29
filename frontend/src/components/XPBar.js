@@ -15,33 +15,50 @@ const XPBar = ({ pet }) => {
     <Box
       sx={{
         position: 'fixed',
-        bottom: "7vh",
+        bottom: '7vh',
         width: '100%',
         padding: 1,
         backgroundColor: 'rgba(255,255,255,0)',
         zIndex: 2,
-        color: "white",
+        color: 'white',
       }}
     >
-      <Typography variant="h3" align="center" fontFamily={"Lucida Console"}>
+      {/* Level Display with Press Start 2P Font */}
+      <Typography
+        variant="h4"
+        align="center"
+        sx={{
+          fontFamily: "'Press Start 2P', cursive", // Updated Font
+        }}
+      >
         Level {pet.level}
       </Typography>
-      <LinearProgress 
-        variant="determinate" 
-        value={progress} 
+
+      {/* XP Progress Bar */}
+      <LinearProgress
+        variant="determinate"
+        value={progress}
         sx={{
-          bgcolor: "gray",
-          height: "2.5vh",
-          width: "70vw",
-          border: "2px solid black",
-          borderRadius: "20px",
-          left: "15.5vw",
-          '& .MuiLinearProgress-bar':{
-            backgroundColor: "green",
-          }
+          bgcolor: 'gray',
+          height: '2.5vh',
+          width: '70vw',
+          border: '2px solid black',
+          borderRadius: '20px',
+          left: '15.5vw',
+          '& .MuiLinearProgress-bar': {
+            backgroundColor: 'green',
+          },
         }}
       />
-      <Typography variant="h5" align="center" fontFamily={"Lucida Console"}>
+
+      {/* XP Label with Press Start 2P Font */}
+      <Typography
+        variant="h6"
+        align="center"
+        sx={{
+          fontFamily: "'Press Start 2P', cursive", // Updated Font
+        }}
+      >
         {pet.xp} / {xpNeededForNextLevel} XP
       </Typography>
     </Box>

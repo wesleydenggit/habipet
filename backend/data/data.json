@@ -1,15 +1,39 @@
 {
   "pet": {
     "name": "Doggo",
-    "level": 4,
-    "xp": 200,
+    "level": 6,
+    "xp": 100,
     "health": 100,
     "happiness": 100
   },
   "habits": [
     {
-      "id": 1727591265347,
+      "id": 1727594429942,
       "name": "test",
+      "frequency": "Daily",
+      "completed": true,
+      "streak": 1,
+      "lastCompleted": "2024-09-29"
+    },
+    {
+      "id": 1727594431502,
+      "name": "test",
+      "frequency": "Daily",
+      "completed": true,
+      "streak": 1,
+      "lastCompleted": "2024-09-29"
+    },
+    {
+      "id": 1727594433143,
+      "name": "atatat",
+      "frequency": "Daily",
+      "completed": true,
+      "streak": 1,
+      "lastCompleted": "2024-09-29"
+    },
+    {
+      "id": 1727594459447,
+      "name": "ta",
       "frequency": "Daily",
       "completed": true,
       "streak": 1,
