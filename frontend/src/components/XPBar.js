@@ -25,7 +25,21 @@ const XPBar = ({ pet }) => {
       <Typography variant="body1" align="center">
         Level {pet.level}
       </Typography>
-      <LinearProgress variant="determinate" value={progress} />
+      <LinearProgress 
+        variant="determinate" 
+        value={progress} 
+        sx={{
+          bgcolor: "gray",
+          height: "2.5vh",
+          width: "70vw",
+          border: "2px solid black",
+          borderRadius: "20px",
+          left: "15.5vw",
+          '& .MuiLinearProgress-bar':{
+            backgroundColor: "green",
+          }
+        }}
+      />
       <Typography variant="body2" align="center">
         {pet.xp} / {xpNeededForNextLevel} XP
       </Typography>
