@@ -61,6 +61,21 @@ const Pet = () => {
         return eggImg; // Default to egg if level is undefined
     }
   };
+  // Function to get horizontal shift based on pet level
+  const getPetShift = (level) => {
+    switch (level) {
+      case 1:
+        return 0;      // No shift for level 1
+      case 2:
+        return -10;    // Shift 10px to the left for level 2
+      case 3:
+        return -50;     // Shift 20px to the right for level 3
+      case 4:
+        return -45;    // Shift 15px to the left for level 4
+      default:
+        return 0;      // Default to no shift
+    }
+  };
 
   // Determine the size based on the pet's level
   const getPetSize = (level) => {
@@ -85,8 +100,9 @@ const Pet = () => {
     return <div>Loading...</div>;
   }
 
-   const petImage = getPetImage(pet.level);
+  const petImage = getPetImage(pet.level);
   const petSize = getPetSize(pet.level);
+  const petShift = getPetShift(pet.level);
 
   return (
     <motion.img
@@ -105,6 +121,7 @@ const Pet = () => {
         y: [0, -10, 0],
         width: petSize.width,
         height: petSize.height,
+        x: petShift,
       }}
       transition={{
         y: {

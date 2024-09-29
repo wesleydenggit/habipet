@@ -7,6 +7,7 @@ import Background from './components/Background';
 import Pet from './components/Pet';
 import Habits from './components/Habits';
 import XPBar from './components/XPBar';
+import HealthBar from './components/HealthBar';
 
 const App = () => {
   const [pet, setPet] = useState(null);
@@ -34,6 +35,7 @@ const App = () => {
       </Box>
       <Pet />
       <XPBar pet={pet} />
+      <HealthBar pet={pet} />
     </Box>
   );
 };

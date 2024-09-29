@@ -5,6 +5,10 @@ const path = require('path');
 
 const dataPath = path.join(__dirname, '../data/data.json');
 
+const MAX_HEALTH = 100;
+const HEALTH_DECREASE = 20; // Health lost if habits are not completed
+const HEALTH_INCREASE = 10; // Health gained if habits are completed
+
 const readData = () => {
   const jsonData = fs.readFileSync(dataPath);
   return JSON.parse(jsonData);
@@ -84,6 +88,14 @@ router.put('/habits/:id', (req, res) => {
       const xpGain = baseXp * habit.streak; // Higher streaks give more XP
       data.pet.xp += xpGain;
 
+      // Increase health if below max
+      if (data.pet.health < MAX_HEALTH) {
+        data.pet.health += HEALTH_INCREASE;
+        if (data.pet.health > MAX_HEALTH) {
+          data.pet.health = MAX_HEALTH;
+        }
+      }
+
       // Check for level up
       const xpNeeded = getXpNeededForNextLevel(data.pet.level);
       while (data.pet.xp >= xpNeeded) {
@@ -117,30 +129,57 @@ router.delete('/habits/:id', (req, res) => {
 const resetHabitsIfNeeded = () => {
   const data = readData();
   const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+  console.log(today);
 
   if (data.lastHabitReset !== today) {
     // It's a new day; reset habits
+    let allHabitsCompleted = true;
+
     data.habits.forEach((habit) => {
       // Check if the habit was completed yesterday
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
       const yesterdayStr = yesterday.toISOString().split('T')[0];
 
-      if (habit.lastCompleted === yesterdayStr) {
-        // Streak continues
-      } else if (habit.lastCompleted !== today) {
-        // Streak is broken
-        habit.streak = 0;
+      if (habit.lastCompleted !== yesterdayStr) {
+        // Habit was not completed yesterday
+        allHabitsCompleted = false;
       }
+
       // Reset the completed status
       habit.completed = false;
     });
+
+    // Update health based on habit completion
+    if (!allHabitsCompleted) {
+      data.pet.health -= HEALTH_DECREASE;
+
+      if (data.pet.health <= 0) {
+        // Reset pet's level, XP, and health
+        data.pet.level = 0;
+        data.pet.xp = 0;
+        data.pet.health = MAX_HEALTH;
+
+        // Reset all habit streaks
+        data.habits.forEach((habit) => {
+          habit.streak = 0;
+        });
+      }
+    } else {
+      // Increase health if habits were completed
+      data.pet.health += HEALTH_INCREASE;
+      if (data.pet.health > MAX_HEALTH) {
+        data.pet.health = MAX_HEALTH;
+      }
+    }
+
     data.lastHabitReset = today;
     writeData(data);
   }
 };
 // Apply reset logic before processing any request
 router.use((req, res, next) => {
+  console.log("haha");
   resetHabitsIfNeeded();
   next();
 });
